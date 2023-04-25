@@ -1,1 +1,1 @@
-Хостинг: https://jsc-ore-todo-versel.vercel.app/
+Хостинг: https://js-core-todo.vercel.app/
