@@ -58,8 +58,8 @@ class Task extends React.Component {
             <span className="description">{description}</span>
             <span className="created">created {N}</span>
           </label>
-          <button className="icon icon-edit" type="button" onClick={this.onEdit} />
-          <button className="icon icon-destroy" type="button" onClick={onDeleted} />
+          <button className="icon icon-edit" type="button" aria-label="Edit" onClick={this.onEdit} />
+          <button className="icon icon-destroy" type="button" aria-label="Delete" onClick={onDeleted} />
         </div>
         {isEdit && (
           <form onSubmit={this.onSubmit}>
