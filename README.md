@@ -8,13 +8,16 @@ eslint-config-prettier — нужен, для того, чтобы за стил
 В доке сказано, что чтобы все ок работало нужно стадии линтера и притиера разделять, не совсем поняла, если честно, т.к. у нас они вроде как и так разделены. В общем, единственное, что помогло это отключить правило и сделать "prettier/prettier" = "off". Надеюсь такой вариант годится, вроде все работает корректно: линтер проверяет свои правила, а затем на стадии формата притиер все форматирует как нужно.
 	
 2) Линтер на прекомит можно было сразу на фикс запустить
+
 Поправила
 	
 3) plugin:react/jsx-runtime - это что, откуда и для чего?
+
 Из доки React: Because the new JSX transform will automatically import the necessary react/jsx-runtime functions, React will no longer need to be in scope when you use JSX. This might lead to unused React imports in your code.
 Из доки eslint-plugin-react: If you are using the new JSX transform from React 17, extend react/jsx-runtime in your eslint config (add "plugin:react/jsx-runtime" to "extends") to disable the relevant rules.
 Т.к. использую 18 ноду, то решила, что это как раз мой случай и нужно добавить это в расширения, чтобы линтер не ругался, что у меня нет импортов React from react.
 Но я сейчас попробовала его убрать и без него все работает, ничего не понимаю...
 
 4) Точно стоило в плагины подлкючать плагины, если они в конифге аир бнб уже настроены?
+
 Да, согласна, все убрала, как-то затупила на этом моменте, решила, что их все равно нужно как-то обозначить.
