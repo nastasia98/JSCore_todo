@@ -6,8 +6,8 @@
     "ignorePatterns": ["node_modules", "build"],
     "extends": [
         "airbnb",
-        "plugin:react/jsx-runtime",
-        "plugin:prettier/recommended"
+        "airbnb/hooks",
+        "prettier"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -20,12 +20,11 @@
             "presets": ["@babel/preset-react"]
         }
     },
-    "plugins": ["react", "prettier", "import", "react-hooks"],
     "parser": "@babel/eslint-parser",
     "rules": {
         "indent": ["error", 2],
         "no-alert": "off",
-        "prettier/prettier": "error",
+        "prettier/prettier": "off",
         "linebreak-style": [0, "unix"],
         "quotes": ["error", "single"],
         "semi": ["error", "never"],

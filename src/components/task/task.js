@@ -56,7 +56,10 @@ class Task extends React.Component {
           <input className="toggle" type="checkbox" checked={checked} id={id} onChange={toggleCompleted} />
           <label htmlFor={id}>
             <span className="description">{description}</span>
-            <span className="created">created {N}</span>
+            <span className="created">
+              created
+              {N}
+            </span>
           </label>
           <button className="icon icon-edit" type="button" aria-label="Edit" onClick={this.onEdit} />
           <button className="icon icon-destroy" type="button" aria-label="Delete" onClick={onDeleted} />
