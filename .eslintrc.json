@@ -28,6 +28,7 @@
         "linebreak-style": [0, "unix"],
         "quotes": ["error", "single"],
         "semi": ["error", "never"],
+        "no-param-reassign": "off",
         "jsx-a11y/no-autofocus": "off",
         "react/react-in-jsx-scope": "off",
         "react-hooks/rules-of-hooks": "error",

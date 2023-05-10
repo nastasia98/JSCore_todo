@@ -14,15 +14,49 @@ class App extends React.Component {
     }
   }
 
-  onItemAdded = (text) => {
+  componentDidMount() {
+    this.timerId = setInterval(() => {
+      this.setState(({ taskList }) => {
+        const newList = taskList.map((task) => {
+          if (task.time === 0) {
+            return task
+          }
+          return !task.paused ? { ...task, time: task.time - 1 } : { ...task }
+        })
+        return { taskList: newList }
+      })
+    }, 1000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerId)
+  }
+
+  onItemAdded = (text, time) => {
     this.setState(({ taskList }) => {
       const newTask = {
         id: Math.random(),
         description: text,
         date: new Date(),
         checked: false,
+        time,
+        paused: false,
       }
       const newTaskList = [...taskList, newTask]
+      return { taskList: newTaskList }
+    })
+  }
+
+  startTimer = (id) => {
+    this.setState(({ taskList }) => {
+      const newTaskList = taskList.map((task) => (task.id === id ? { ...task, paused: false } : { ...task }))
+      return { taskList: newTaskList }
+    })
+  }
+
+  stopTimer = (id) => {
+    this.setState(({ taskList }) => {
+      const newTaskList = taskList.map((task) => (task.id === id ? { ...task, paused: true } : { ...task }))
       return { taskList: newTaskList }
     })
   }
@@ -90,6 +124,8 @@ class App extends React.Component {
             onDeleted={this.onDeleted}
             toggleCompleted={this.toggleCompleted}
             onSubmitEditTask={this.onSubmitEditTask}
+            startTimer={this.startTimer}
+            stopTimer={this.stopTimer}
           />
           <Footer
             countItemsLeft={countItemsLeft}

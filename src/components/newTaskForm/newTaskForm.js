@@ -6,31 +6,50 @@ import './newTaskForm.css'
 class NewTaskForm extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { taskText: '' }
+    this.state = {
+      taskText: '',
+      minutes: '',
+      seconds: '',
+    }
   }
 
   newTaskAdd = (e) => {
     this.setState({ taskText: e.target.value })
   }
 
+  setMinutes = (e) => {
+    this.setState({ minutes: e.target.value })
+  }
+
+  setSeconds = (e) => {
+    this.setState({ seconds: e.target.value })
+  }
+
   submitNewTask = (e) => {
-    const { taskText } = this.state
+    const { taskText, minutes, seconds } = this.state
     const { onItemAdded } = this.props
 
     e.preventDefault()
-    if (taskText.trim() !== '') {
-      onItemAdded(taskText)
-      this.setState({ taskText: '' })
+    if (
+      taskText.trim() !== '' &&
+      !Number.isNaN(Number(minutes)) &&
+      !Number.isNaN(Number(seconds)) &&
+      minutes !== '' &&
+      seconds !== ''
+    ) {
+      const time = minutes * 60 + seconds * 1
+      onItemAdded(taskText, time)
+      this.setState({ taskText: '', seconds: '', minutes: '' })
     } else {
-      alert('Пожалуйста, ввдедите корректное название задачи.')
-      this.setState({ taskText: '' })
+      alert('Пожалуйста, ввдедите корректное название задачи и время.')
+      this.setState({ taskText: '', seconds: '', minutes: '' })
     }
   }
 
   render() {
-    const { taskText } = this.state
+    const { taskText, minutes, seconds } = this.state
     return (
-      <form onSubmit={this.submitNewTask}>
+      <form className="new-todo-form" onSubmit={this.submitNewTask}>
         <input
           className="new-todo"
           placeholder="What needs to be done?"
@@ -38,6 +57,21 @@ class NewTaskForm extends React.Component {
           value={taskText}
           onChange={this.newTaskAdd}
         />
+        <input
+          className="new-todo-form__timer"
+          placeholder="Min"
+          autoFocus
+          value={minutes}
+          onChange={this.setMinutes}
+        />
+        <input
+          className="new-todo-form__timer"
+          placeholder="Sec"
+          autoFocus
+          value={seconds}
+          onChange={this.setSeconds}
+        />
+        <button type="submit" aria-label="Submit" />
       </form>
     )
   }

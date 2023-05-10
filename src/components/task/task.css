@@ -71,12 +71,12 @@ label {
   padding: 15px 85px 15px 60px;
 }
 
-label .created {
+label .description {
   font-size: 13px;
   color: gray;
 }
 
-label .description {
+label .title {
   word-break: break-all;
   display: block;
   line-height: 1.2;
@@ -85,20 +85,17 @@ label .description {
   color: #4d4d4d;
 }
 
-.completed label .description {
+.completed label .title {
   color: #cdcdcd;
   text-decoration: line-through;
 }
 
 .icon {
-  position: absolute;
-  top: 0;
-  bottom: -3px;
   width: 30px;
   height: 40px;
   font-size: 34px;
   color: #cc9a9a;
-  margin: auto 0 11px;
+  margin: auto 0;
   transition: color 0.2s ease-out;
   cursor: pointer;
 }
@@ -108,6 +105,9 @@ label .description {
 }
 
 .icon-destroy {
+  position: absolute;
+  top: 0;
+  bottom: -3px;
   right: 10px;
 }
 
@@ -116,12 +116,31 @@ label .description {
 }
 
 .icon-edit {
+  position: absolute;
+  top: 0;
+  bottom: -3px;
   font-size: 19px;
   right: 45px;
 }
 
 .icon-edit:after {
   content: '✎';
+}
+
+.icon-pause,
+.icon-play {
+  font-size: 15px;
+  width: 18px;
+  height: 18px;
+  margin-right: 2px;
+}
+
+.icon-pause:after {
+  content: '⏸';
+}
+
+.icon-play:after {
+  content: '▶';
 }
 
 .editing:last-child {
