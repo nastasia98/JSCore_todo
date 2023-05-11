@@ -58,7 +58,6 @@ class NewTaskForm extends React.Component {
           min="0"
           max="59"
           placeholder="Min"
-          autoFocus
           value={minutes}
           onChange={this.setMinutes}
         />
@@ -68,7 +67,6 @@ class NewTaskForm extends React.Component {
           min="0"
           max="59"
           placeholder="Sec"
-          autoFocus
           value={seconds}
           onChange={this.setSeconds}
         />

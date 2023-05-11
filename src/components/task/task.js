@@ -74,7 +74,15 @@ class Task extends React.Component {
       classListItem += ' completed'
     }
 
-    const playStopBtn = Object.hasOwn(task, 'paused') ? paused : null
+    const playStopBtn = Object.keys(task).includes('paused')
+    let button
+    if (playStopBtn && paused) {
+      button = <button className="icon icon-play" type="button" aria-label="Play" onClick={startTimer} />
+    } else if (playStopBtn && !paused) {
+      button = <button className="icon icon-pause" type="button" aria-label="Pause" onClick={stopTimer} />
+    } else {
+      button = null
+    }
 
     return (
       <div className={classListItem}>
@@ -83,11 +91,7 @@ class Task extends React.Component {
           <label htmlFor={id}>
             <span className="title">{description}</span>
             <span className="description">
-              {playStopBtn ? (
-                <button className="icon icon-play" type="button" aria-label="Play" onClick={startTimer} />
-              ) : (
-                <button className="icon icon-pause" type="button" aria-label="Pause" onClick={stopTimer} />
-              )}
+              {button}
               {Math.trunc(time / 60)
                 .toString()
                 .padStart(2, '0')}
