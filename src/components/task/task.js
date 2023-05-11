@@ -13,6 +13,14 @@ class Task extends React.Component {
     }
   }
 
+  componentDidMount() {
+    document.addEventListener('mousedown', this.stopEditWithClick)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.stopEditWithClick)
+  }
+
   onEdit = () => {
     const { task } = this.props
     this.setState({ isEdit: true, value: task.description })
@@ -36,6 +44,22 @@ class Task extends React.Component {
     }
   }
 
+  stopEditWithEsc = (e) => {
+    if (e.keyCode === 27) {
+      this.setState({ isEdit: false })
+    }
+  }
+
+  setWrapperRef = (node) => {
+    this.wrapperRef = node
+  }
+
+  stopEditWithClick = (e) => {
+    if (this.wrapperRef && !this.wrapperRef.contains(e.target)) {
+      this.setState({ isEdit: false })
+    }
+  }
+
   render() {
     const { task, onDeleted, toggleCompleted, startTimer, stopTimer } = this.props
     const { id, description, date, checked, time, paused } = task
@@ -50,6 +74,8 @@ class Task extends React.Component {
       classListItem += ' completed'
     }
 
+    const playStopBtn = Object.hasOwn(task, 'paused') ? paused : null
+
     return (
       <div className={classListItem}>
         <div className="view">
@@ -57,7 +83,7 @@ class Task extends React.Component {
           <label htmlFor={id}>
             <span className="title">{description}</span>
             <span className="description">
-              {paused ? (
+              {playStopBtn ? (
                 <button className="icon icon-play" type="button" aria-label="Play" onClick={startTimer} />
               ) : (
                 <button className="icon icon-pause" type="button" aria-label="Pause" onClick={stopTimer} />
@@ -73,8 +99,16 @@ class Task extends React.Component {
           <button className="icon icon-destroy" type="button" aria-label="Delete" onClick={onDeleted} />
         </div>
         {isEdit && (
-          <form onSubmit={this.onSubmit}>
-            <input className="edit" type="text" value={value} onChange={this.changeValue} autoFocus />
+          <form className="edit-form" onSubmit={this.onSubmit}>
+            <input
+              className="edit"
+              type="text"
+              value={value}
+              autoFocus
+              ref={this.setWrapperRef}
+              onChange={this.changeValue}
+              onKeyDown={this.stopEditWithEsc}
+            />
           </form>
         )}
       </div>

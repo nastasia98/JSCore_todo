@@ -19,6 +19,7 @@ class App extends React.Component {
       this.setState(({ taskList }) => {
         const newList = taskList.map((task) => {
           if (task.time === 0) {
+            delete task.paused
             return task
           }
           return !task.paused ? { ...task, time: task.time - 1 } : { ...task }

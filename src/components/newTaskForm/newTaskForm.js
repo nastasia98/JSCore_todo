@@ -30,13 +30,7 @@ class NewTaskForm extends React.Component {
     const { onItemAdded } = this.props
 
     e.preventDefault()
-    if (
-      taskText.trim() !== '' &&
-      !Number.isNaN(Number(minutes)) &&
-      !Number.isNaN(Number(seconds)) &&
-      minutes !== '' &&
-      seconds !== ''
-    ) {
+    if (taskText !== '') {
       const time = minutes * 60 + seconds * 1
       onItemAdded(taskText, time)
       this.setState({ taskText: '', seconds: '', minutes: '' })
@@ -52,6 +46,7 @@ class NewTaskForm extends React.Component {
       <form className="new-todo-form" onSubmit={this.submitNewTask}>
         <input
           className="new-todo"
+          type="text"
           placeholder="What needs to be done?"
           autoFocus
           value={taskText}
@@ -59,6 +54,9 @@ class NewTaskForm extends React.Component {
         />
         <input
           className="new-todo-form__timer"
+          type="number"
+          min="0"
+          max="59"
           placeholder="Min"
           autoFocus
           value={minutes}
@@ -66,6 +64,9 @@ class NewTaskForm extends React.Component {
         />
         <input
           className="new-todo-form__timer"
+          type="number"
+          min="0"
+          max="59"
           placeholder="Sec"
           autoFocus
           value={seconds}
