@@ -1,79 +1,66 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import './newTaskForm.css'
 
-class NewTaskForm extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      taskText: '',
-      minutes: '',
-      seconds: '',
-    }
-  }
+function NewTaskForm({ onItemAdded }) {
+  const [taskText, setTaskText] = useState('')
+  const [min, setMin] = useState('')
+  const [sec, setSec] = useState('')
 
-  newTaskAdd = (e) => {
-    this.setState({ taskText: e.target.value })
-  }
+  const newTaskAdd = (e) => setTaskText(e.target.value)
 
-  setMinutes = (e) => {
-    this.setState({ minutes: e.target.value })
-  }
+  const setMinutes = (e) => setMin(e.target.value)
 
-  setSeconds = (e) => {
-    this.setState({ seconds: e.target.value })
-  }
+  const setSeconds = (e) => setSec(e.target.value)
 
-  submitNewTask = (e) => {
-    const { taskText, minutes, seconds } = this.state
-    const { onItemAdded } = this.props
-
+  const submitNewTask = (e) => {
     e.preventDefault()
-    if (taskText !== '') {
-      const time = minutes * 60 + seconds * 1
+    if (taskText.trim() !== '') {
+      const time = min * 60 + sec * 1
       onItemAdded(taskText, time)
-      this.setState({ taskText: '', seconds: '', minutes: '' })
+      setTaskText('')
+      setMin('')
+      setSec('')
     } else {
       alert('Пожалуйста, ввдедите корректное название задачи и время.')
-      this.setState({ taskText: '', seconds: '', minutes: '' })
+      setTaskText('')
+      setMin('')
+      setSec('')
     }
   }
 
-  render() {
-    const { taskText, minutes, seconds } = this.state
-    return (
-      <form className="new-todo-form" onSubmit={this.submitNewTask}>
-        <input
-          className="new-todo"
-          type="text"
-          placeholder="What needs to be done?"
-          autoFocus
-          value={taskText}
-          onChange={this.newTaskAdd}
-        />
-        <input
-          className="new-todo-form__timer"
-          type="number"
-          min="0"
-          max="59"
-          placeholder="Min"
-          value={minutes}
-          onChange={this.setMinutes}
-        />
-        <input
-          className="new-todo-form__timer"
-          type="number"
-          min="0"
-          max="59"
-          placeholder="Sec"
-          value={seconds}
-          onChange={this.setSeconds}
-        />
-        <button type="submit" aria-label="Submit" />
-      </form>
-    )
-  }
+  return (
+    <form className="new-todo-form" onSubmit={submitNewTask}>
+      <input
+        className="new-todo"
+        type="text"
+        placeholder="What needs to be done?"
+        autoFocus
+        value={taskText}
+        onChange={newTaskAdd}
+      />
+      <input
+        className="new-todo-form__timer"
+        type="number"
+        min="0"
+        max="59"
+        placeholder="Min"
+        value={min}
+        onChange={setMinutes}
+      />
+      <input
+        className="new-todo-form__timer"
+        type="number"
+        min="0"
+        max="59"
+        placeholder="Sec"
+        value={sec}
+        onChange={setSeconds}
+      />
+      <button type="submit" aria-label="Submit" />
+    </form>
+  )
 }
 
 NewTaskForm.propTypes = {

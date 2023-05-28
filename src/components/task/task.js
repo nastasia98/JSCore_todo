@@ -1,123 +1,95 @@
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { formatDistanceToNow } from 'date-fns'
 
 import './task.css'
+import useOutsideClick from '../../hooks/useOutsideClick'
 
-class Task extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      isEdit: false,
-      value: '',
-    }
+function Task({ task, onSubmitEditTask, onDeleted, toggleCompleted, startTimer, stopTimer }) {
+  const [value, setValue] = useState('')
+  const [isEdit, setIsEdit] = useState(false)
+  const ref = useRef()
+
+  useOutsideClick(ref, () => setIsEdit(false))
+
+  const onEdit = () => {
+    setValue(task.description)
+    setIsEdit(true)
   }
 
-  componentDidMount() {
-    document.addEventListener('mousedown', this.stopEditWithClick)
-  }
+  const changeValue = (e) => setValue(e.target.value)
 
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.stopEditWithClick)
-  }
-
-  onEdit = () => {
-    const { task } = this.props
-    this.setState({ isEdit: true, value: task.description })
-  }
-
-  changeValue = (e) => {
-    this.setState({ value: e.target.value })
-  }
-
-  onSubmit = (e) => {
-    const { task, onSubmitEditTask } = this.props
-    const { value } = this.state
-
+  const onSubmit = (e) => {
     e.preventDefault()
     if (value.trim() !== '') {
       onSubmitEditTask(task.id, value)
-      this.setState({ isEdit: false })
+      setIsEdit(false)
     } else {
       alert('Пожалуйста, ввдедите корректное название задачи.')
-      this.setState({ value: '' })
+      setValue('')
     }
   }
 
-  stopEditWithEsc = (e) => {
+  const stopEditWithEsc = (e) => {
     if (e.keyCode === 27) {
-      this.setState({ isEdit: false })
+      setIsEdit(false)
     }
   }
 
-  setWrapperRef = (node) => {
-    this.wrapperRef = node
+  const { id, description, date, checked, time, paused } = task
+
+  const N = formatDistanceToNow(date, { addSuffix: true, includeSeconds: true })
+
+  let classListItem = 'listItem'
+  if (isEdit) {
+    classListItem += ' editing'
+  } else if (checked) {
+    classListItem += ' completed'
   }
 
-  stopEditWithClick = (e) => {
-    if (this.wrapperRef && !this.wrapperRef.contains(e.target)) {
-      this.setState({ isEdit: false })
-    }
+  const playStopBtn = Object.keys(task).includes('paused')
+  let button
+  if (playStopBtn && paused) {
+    button = <button className="icon icon-play" type="button" aria-label="Play" onClick={startTimer} />
+  } else if (playStopBtn && !paused) {
+    button = <button className="icon icon-pause" type="button" aria-label="Pause" onClick={stopTimer} />
+  } else {
+    button = null
   }
 
-  render() {
-    const { task, onDeleted, toggleCompleted, startTimer, stopTimer } = this.props
-    const { id, description, date, checked, time, paused } = task
-    const { isEdit, value } = this.state
-
-    const N = formatDistanceToNow(date, { addSuffix: true, includeSeconds: true })
-
-    let classListItem = 'listItem'
-    if (isEdit) {
-      classListItem += ' editing'
-    } else if (checked) {
-      classListItem += ' completed'
-    }
-
-    const playStopBtn = Object.keys(task).includes('paused')
-    let button
-    if (playStopBtn && paused) {
-      button = <button className="icon icon-play" type="button" aria-label="Play" onClick={startTimer} />
-    } else if (playStopBtn && !paused) {
-      button = <button className="icon icon-pause" type="button" aria-label="Pause" onClick={stopTimer} />
-    } else {
-      button = null
-    }
-
-    return (
-      <div className={classListItem}>
-        <div className="view">
-          <input className="toggle" type="checkbox" checked={checked} id={id} onChange={toggleCompleted} />
-          <label htmlFor={id}>
-            <span className="title">{description}</span>
-            <span className="description">
-              {button}
-              {Math.trunc(time / 60)
-                .toString()
-                .padStart(2, '0')}
-              :{(time % 60).toString().padStart(2, '0')}
-            </span>
-            <span className="description">created {N}</span>
-          </label>
-          <button className="icon icon-edit" type="button" aria-label="Edit" onClick={this.onEdit} />
-          <button className="icon icon-destroy" type="button" aria-label="Delete" onClick={onDeleted} />
-        </div>
-        {isEdit && (
-          <form className="edit-form" onSubmit={this.onSubmit}>
-            <input
-              className="edit"
-              type="text"
-              value={value}
-              autoFocus
-              ref={this.setWrapperRef}
-              onChange={this.changeValue}
-              onKeyDown={this.stopEditWithEsc}
-            />
-          </form>
-        )}
+  return (
+    <div className={classListItem}>
+      <div className="view">
+        <input className="toggle" type="checkbox" checked={checked} id={id} onChange={toggleCompleted} />
+        <label htmlFor={id}>
+          <span className="title">{description}</span>
+          <span className="description">
+            {button}
+            {Math.trunc(time / 60)
+              .toString()
+              .padStart(2, '0')}
+            :{(time % 60).toString().padStart(2, '0')}
+          </span>
+          <span className="description">created {N}</span>
+        </label>
+        <button className="icon icon-edit" type="button" aria-label="Edit" onClick={onEdit} />
+        <button className="icon icon-destroy" type="button" aria-label="Delete" onClick={onDeleted} />
       </div>
-    )
-  }
+      {isEdit && (
+        <form className="edit-form" onSubmit={onSubmit}>
+          <input
+            className="edit"
+            type="text"
+            value={value}
+            autoFocus
+            ref={ref}
+            onChange={changeValue}
+            onKeyDown={stopEditWithEsc}
+          />
+        </form>
+      )}
+    </div>
+  )
 }
 
 Task.defaultProps = {
