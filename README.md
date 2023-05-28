@@ -1,1 +1,1 @@
-Хостинг: https://js-core-todo-hhkatcql3-nastasia98.vercel.app/
+Хостинг: https://js-core-todo-2yg1btf1h-nastasia98.vercel.app/
